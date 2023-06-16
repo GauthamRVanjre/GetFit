@@ -1,19 +1,36 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StyleSheet, StatusBar } from "react-native";
 import Home from "./screens/Home";
 import SplashScreen from "./screens/SplashScreen";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Splash Screen" component={SplashScreen} />
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
+      <AppNavigator />
     </NavigationContainer>
   );
 }
+
+const AppNavigator = () => {
+  const Stack = createNativeStackNavigator();
+  return (
+    <>
+      <StatusBar barStyle="light-content" />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#000000", // Set the background color to black
+          },
+          headerTintColor: "#ffffff", // Set the text color to white
+        }}
+      >
+        <Stack.Screen name="Login" component={SplashScreen} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
