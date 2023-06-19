@@ -1,49 +1,73 @@
 import React, { useState } from "react";
-import { SearchBar } from "@rneui/themed";
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  TextInput,
+} from "react-native";
 import { COLORS } from "../assets/colors";
 
 const Home = () => {
   const [search, setSearch] = useState("");
 
+  const exerciseByBodyParts = [
+    "back",
+    "cardio",
+    "chest",
+    "lower arms",
+    "lower legs",
+    "neck",
+    "shoulders",
+    "upper arms",
+    "upper legs",
+    "waist",
+  ];
+
   const updateSearch = (search) => {
     setSearch(search);
+  };
+
+  const handlePress = (value) => {
+    setSearch(value);
   };
 
   return (
     <View style={styles.pageContainer}>
       <View style={styles.view}>
-        <SearchBar
-          placeholder="Search Workouts..."
-          onChangeText={updateSearch}
-          value={search}
-        />
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search Excerise..."
+            value={search}
+            onChangeText={updateSearch}
+          />
+          <Pressable style={styles.searchPressable}>
+            {/* Add your search icon or text here */}
+            <Text style={styles.pressableText}>Search</Text>
+          </Pressable>
+        </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={true}>
           <View style={styles.bodyPartsTabsContainer}>
-            <Pressable style={styles.pressableTabContainer}>
-              <Text style={styles.pressableText}>Pressabel 1</Text>
-            </Pressable>
-            <Pressable style={styles.pressableTabContainer}>
-              <Text>Pressabel 2</Text>
-            </Pressable>
-            <Pressable style={styles.pressableTabContainer}>
-              <Text>Pressabel 3</Text>
-            </Pressable>
-            <Pressable style={styles.pressableTabContainer}>
-              <Text>Pressabel 4</Text>
-            </Pressable>
-            <Pressable style={styles.pressableTabContainer}>
-              <Text>Pressabel 5</Text>
-            </Pressable>
+            {exerciseByBodyParts.map((exercise, index) => (
+              <Pressable
+                onPress={() => handlePress(exercise)}
+                key={index}
+                style={styles.pressableTabContainer}
+              >
+                <Text style={styles.pressableText}>{exercise}</Text>
+              </Pressable>
+            ))}
           </View>
         </ScrollView>
 
-        {/* <Text>
+        <Text style={styles.searchText}>
           {search.length > 0
             ? `Search Results for- ${search}`
-            : "search something"}
-        </Text> */}
+            : "Search something"}
+        </Text>
       </View>
     </View>
   );
@@ -55,11 +79,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bodyBackground,
   },
   view: {
-    backgroundColor: COLORS.text,
+    backgroundColor: COLORS.bodyBackground,
   },
   bodyPartsTabsContainer: {
     display: "flex",
     flexDirection: "row",
+    marginTop: 10,
     backgroundColor: COLORS.bodyBackground,
   },
   pressableTabContainer: {
@@ -69,6 +94,29 @@ const styles = StyleSheet.create({
   },
   pressableText: {
     color: COLORS.text,
+  },
+  searchText: {
+    backgroundColor: COLORS.bodyBackground,
+    color: COLORS.text,
+    textAlign: "center",
+  },
+  input: {
+    width: "70%",
+    height: "100%",
+    padding: 10,
+    marginLeft: 10,
+    backgroundColor: COLORS.searchBackground,
+    color: COLORS.text,
+  },
+  searchContainer: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: COLORS.bodyBackground,
+  },
+  searchPressable: {
+    padding: 10,
+    width: "20%",
+    backgroundColor: COLORS.primaryBackground,
   },
 });
 
