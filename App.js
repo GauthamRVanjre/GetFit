@@ -25,7 +25,11 @@ const AppNavigator = () => {
           headerTintColor: "#ffffff", // Set the text color to white
         }}
       >
-        <Stack.Screen name="Login" component={SplashScreen} />
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </>
