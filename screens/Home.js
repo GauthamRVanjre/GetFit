@@ -8,9 +8,12 @@ import {
   TextInput,
 } from "react-native";
 import { COLORS } from "../assets/colors";
+import ExcerisesList from "../components/ExcerisesList";
 
 const Home = () => {
   const [search, setSearch] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const exerciseByBodyParts = [
     "back",
@@ -33,6 +36,10 @@ const Home = () => {
     setSearch(value);
   };
 
+  const handleSearchPress = (value) => {
+    setSearchQuery(value);
+  };
+
   return (
     <View style={styles.pageContainer}>
       <View style={styles.view}>
@@ -43,7 +50,10 @@ const Home = () => {
             value={search}
             onChangeText={updateSearch}
           />
-          <Pressable style={styles.searchPressable}>
+          <Pressable
+            onPress={() => handleSearchPress(search)}
+            style={styles.searchPressable}
+          >
             {/* Add your search icon or text here */}
             <Text style={styles.pressableText}>Search</Text>
           </Pressable>
@@ -69,6 +79,8 @@ const Home = () => {
             : "Search something"}
         </Text>
       </View>
+
+      <ExcerisesList searchQuery={searchQuery} />
     </View>
   );
 };
@@ -112,6 +124,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     backgroundColor: COLORS.bodyBackground,
+    marginLeft: 10,
   },
   searchPressable: {
     padding: 10,
