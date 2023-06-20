@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, StatusBar } from "react-native";
 import Home from "./screens/Home";
 import SplashScreen from "./screens/SplashScreen";
+import DetailScreen from "./screens/DetailScreen";
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ const AppNavigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="DetailScreen" component={DetailScreen} />
       </Stack.Navigator>
     </>
   );

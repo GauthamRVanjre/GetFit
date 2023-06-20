@@ -9,11 +9,17 @@ import {
 import React, { useEffect, useState } from "react";
 import { COLORS } from "../assets/colors";
 import { apiKey, host } from "../api-key";
+import { useNavigation } from "@react-navigation/native";
 
 const ExcerisesList = ({ searchQuery }) => {
   const [exceriseList, setExceriseList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const navigate = useNavigation();
+
+  const handlePress = (id) => {
+    navigate.navigate("DetailScreen", { id: id });
+  };
 
   const getSpecificExcersises = async () => {
     const result = await fetch(
@@ -59,7 +65,10 @@ const ExcerisesList = ({ searchQuery }) => {
           <Text style={styles.cardHeading}>
             {item.name.substring(0, 10)}...
           </Text>
-          <Pressable style={styles.cardButton}>
+          <Pressable
+            onPress={() => handlePress(item.id)}
+            style={styles.cardButton}
+          >
             <Text style={{ color: COLORS.text, textAlign: "center" }}>
               Details
             </Text>
@@ -68,10 +77,6 @@ const ExcerisesList = ({ searchQuery }) => {
       </View>
     );
   };
-
-  useEffect(() => {
-    getExcersises();
-  }, []);
 
   useEffect(() => {
     if (searchQuery.length > 0) {
