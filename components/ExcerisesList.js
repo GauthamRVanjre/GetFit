@@ -12,9 +12,27 @@ import { apiKey, host } from "../api-key";
 
 const ExcerisesList = ({ searchQuery }) => {
   const [exceriseList, setExceriseList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  const getExcersises = () => {
-    const result = fetch("https://exercisedb.p.rapidapi.com/exercises", {
+  const getSpecificExcersises = async () => {
+    const result = await fetch(
+      `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${searchQuery}`,
+      {
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Key": apiKey,
+          "X-RapidAPI-Host": host,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setExceriseList(data), setLoading(false), setError(false))
+      .catch((err) => setError(true), setLoading(false));
+  };
+
+  const getExcersises = async () => {
+    const result = await fetch("https://exercisedb.p.rapidapi.com/exercises", {
       method: "GET",
       headers: {
         "X-RapidAPI-Key": apiKey,
@@ -22,8 +40,8 @@ const ExcerisesList = ({ searchQuery }) => {
       },
     })
       .then((res) => res.json())
-      .then((data) => setExceriseList(data))
-      .catch((err) => console.log("Some error occured", err));
+      .then((data) => setExceriseList(data), setLoading(false), setError(false))
+      .catch((err) => setError(true), setLoading(false));
   };
 
   const renderItem = ({ item }) => {
@@ -36,12 +54,17 @@ const ExcerisesList = ({ searchQuery }) => {
           }}
           onError={(error) => console.log("Error loading image:", error)}
         />
-        <Text style={styles.cardHeading}>{item.name}</Text>
-        <Pressable style={styles.cardButton}>
-          <Text style={{ color: COLORS.text, textAlign: "center" }}>
-            Expand Card
+
+        <View style={styles.exceriseDetailsContainer}>
+          <Text style={styles.cardHeading}>
+            {item.name.substring(0, 10)}...
           </Text>
-        </Pressable>
+          <Pressable style={styles.cardButton}>
+            <Text style={{ color: COLORS.text, textAlign: "center" }}>
+              Details
+            </Text>
+          </Pressable>
+        </View>
       </View>
     );
   };
@@ -49,38 +72,59 @@ const ExcerisesList = ({ searchQuery }) => {
   useEffect(() => {
     getExcersises();
   }, []);
-  return (
-    <View>
-      <FlatList
-        data={exceriseList}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
-    </View>
-  );
+
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      getSpecificExcersises();
+    } else {
+      getExcersises();
+    }
+  }, [searchQuery]);
+
+  if (loading) {
+    return (
+      <View>
+        <Text
+          style={{ textAlign: "center", marginTop: 120, color: COLORS.text }}
+        >
+          Loading Excerises...
+        </Text>
+        <Pressable style={styles.cardButton}></Pressable>
+      </View>
+    );
+  } else if (error) {
+    return (
+      <Text style={{ textAlign: "center", marginTop: 120, color: COLORS.text }}>
+        An error occured, make sure you are connected to Internet...
+      </Text>
+    );
+  } else
+    return (
+      <>
+        <Text style={styles.searchText}>
+          {searchQuery.length > 0
+            ? `Search Results for- ${searchQuery}`
+            : "Search results for all excerises"}
+        </Text>
+        <View>
+          <FlatList
+            data={exceriseList}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
+        </View>
+      </>
+    );
 };
 
-{
-  /* <View style={styles.card}>
-        <Image
-          style={styles.cardImage}
-          source={{
-            uri: "https://awildgeographer.files.wordpress.com/2015/02/john_muir_glacier.jpg",
-          }}
-          onError={(error) => console.log("Error loading image:", error)}
-        />
-        <Text style={styles.cardHeading}>Hello World</Text>
-        <Pressable style={styles.cardButton}>
-          <Text style={{ color: COLORS.text, textAlign: "center" }}>
-            Expand Card
-          </Text>
-        </Pressable>
-      </View> */
-}
-
-export default ExcerisesList;
-
 const styles = StyleSheet.create({
+  searchText: {
+    backgroundColor: COLORS.bodyBackground,
+    color: COLORS.text,
+    textAlign: "center",
+    fontSize: 12,
+    margin: 5,
+  },
   cardHeading: {
     color: COLORS.text,
     textAlign: "center",
@@ -102,10 +146,16 @@ const styles = StyleSheet.create({
 
   cardButton: {
     backgroundColor: COLORS.primaryBackground,
-    width: "40%",
+    width: "20%",
     marginLeft: 100,
     padding: 10,
-    marginBottom: 20,
     borderRadius: 10,
   },
+  exceriseDetailsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
+
+export default ExcerisesList;

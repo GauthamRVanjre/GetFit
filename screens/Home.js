@@ -72,12 +72,6 @@ const Home = () => {
             ))}
           </View>
         </ScrollView>
-
-        <Text style={styles.searchText}>
-          {search.length > 0
-            ? `Search Results for- ${search}`
-            : "Search something"}
-        </Text>
       </View>
 
       <ExcerisesList searchQuery={searchQuery} />
