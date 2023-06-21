@@ -69,7 +69,7 @@ const ExcerisesList = ({ searchQuery }) => {
             onPress={() => handlePress(item.id)}
             style={styles.cardButton}
           >
-            <Text style={{ color: COLORS.text, textAlign: "center" }}>
+            <Text style={{ color: COLORS.text, textAlign: "center", paddingTop: 5 }}>
               Details
             </Text>
           </Pressable>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bodyBackground,
     color: COLORS.text,
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 18,
     margin: 5,
   },
   cardHeading: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 
   cardButton: {
     backgroundColor: COLORS.primaryBackground,
-    width: "20%",
+    width: "23%",
     marginLeft: 100,
     padding: 10,
     borderRadius: 10,
